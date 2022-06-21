@@ -1,16 +1,17 @@
 pair_number_end = 25
-correct_format_sep1_idx = 4
-correct_format_sep2_idx = 13
+pair_number_start = 1
+major_colors = ["White", "Red", "Black", "Yellow", "Violet"]
+minor_colors = ["Blue", "Orange", "Green", "Brown", "Slate"]
 
 def print_color_map():
-    major_colors = ["White", "Red", "Black", "Yellow", "Violet"]
-    minor_colors = ["Blue", "Orange", "Green", "Brown", "Slate"]
+    color_map = []
     for i, major in enumerate(major_colors):
         for j, minor in enumerate(minor_colors):
-            pair_number = get_pairnumber(i,j) 
+            pair_number = get_pairnumber(i,j)
             [first_sep_idx,second_sep_idx] = get_separator_index(format_string(pair_number, major, minor))
             print(format_string(pair_number, major, minor))
-    return pair_number,len(major_colors) * len(minor_colors),[first_sep_idx,second_sep_idx]
+            color_map.append((pair_number, [first_sep_idx,second_sep_idx])) 
+    return len(major_colors) * len(minor_colors),color_map
 
 def format_string(pair_number, major_color, minor_color):
   return f'{pair_number} | {major_color} | {minor_color}'
@@ -20,10 +21,17 @@ def get_separator_index(formatted_string):
     return [first_sep_idx,second_sep_idx]
 
 def get_pairnumber(major_color, minor_color):
-    return major_color * 5 + minor_color
+    return major_color * 5 + minor_color 
 
-pair_number,result,[first_sep_idx,second_sep_idx] = print_color_map()
+#Test function to check 
+# 1. formating by separator index 
+# 2. pair number range 
+def test_color_map(color_map):
+    for i in range(pair_number_start,pair_number_end):
+        assert([color_map[i][1][0],color_map[i][1][1]]==[color_map[pair_number_end-i][1][0],color_map[pair_number_end-i][1][1]])
+        assert(color_map[i][0] == (i + 1))
+
+result,color_map = print_color_map()
 assert(result == 25)
-assert(pair_number==pair_number_end)
-assert([first_sep_idx,second_sep_idx]==[correct_format_sep1_idx,correct_format_sep2_idx])
+test_color_map(color_map)
 print("All is well (maybe!)\n")
